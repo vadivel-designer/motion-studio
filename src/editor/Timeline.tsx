@@ -99,7 +99,6 @@ export function Timeline() {
           setScenesTiming(ups);
         }
       },
-      onEnd: (moved) => { if (!moved && !wasActive) setActiveScene(s.id); else if (!moved) { select([]); } },
     });
     if (!wasActive) setActiveScene(s.id);
   };

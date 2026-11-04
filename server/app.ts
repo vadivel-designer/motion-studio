@@ -61,6 +61,9 @@ export async function startServer(opts: ServerOptions) {
   app.use('/api/projects/:name/files', (req, res, next) => {
     const dir = store.folder(req.params.name);
     res.setHeader('Cache-Control', 'no-cache');
+    // uploaded SVG/HTML must never run scripts if opened directly on the app origin
+    res.setHeader('Content-Security-Policy', 'sandbox');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
     express.static(dir, { fallthrough: false })(req, res, next);
   });
   app.get('/api/projects/:name/zip', h(async (req, res) => {
@@ -147,7 +150,7 @@ export async function startServer(opts: ServerOptions) {
     res.status(status).json({ error: err instanceof Error ? err.message : String(err) });
   });
 
-  await new Promise<void>((resolve) => server.listen(opts.port, resolve));
+  await new Promise<void>((resolve) => server.listen(opts.port, process.env.HOST ?? 'localhost', resolve));
   const port = (server.address() as any).port as number;
   if (!opts.quiet) console.log(`Motion Studio running at http://localhost:${port}  (projects: ${store.root})`);
   return { server, port, store, close: () => new Promise<void>((r) => { server.close(() => r()); server.closeAllConnections?.(); }) };

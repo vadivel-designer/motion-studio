@@ -6,7 +6,7 @@ import type { Direction, PresetKind, PresetParams, StaggerOrder, StaggerParams }
 import type { CursorLayer } from '../shared/schema';
 import { EasingEditor } from './EasingEditor';
 import {
-  addLayer, applyPresetTo, applyStaggerTo, findLayer, localTime, setProps, updateCursor, useEditor,
+  addLayer, applyPresetTo, applyStaggerTo, findLayer, localTime, updateCursor, useEditor,
 } from './store';
 import { ColorField, NumberField, Row, Section } from './ui';
 
@@ -150,10 +150,8 @@ function CursorSection({ layer }: { layer: CursorLayer }) {
   );
 }
 
-export function Phase2Sections({ ids, locked }: { ids: string[]; locked: boolean }) {
+export function Phase2Sections({ ids }: { ids: string[]; locked?: boolean }) {
   const project = useEditor((s) => s.project);
-  void locked;
-  void setProps;
   const layers = ids.map((i) => findLayer(project, i)?.layer).filter((l): l is NonNullable<typeof l> => !!l);
   const animatable = layers.filter((l) => l.type !== 'cursor').map((l) => l.id);
   const cursor = layers.length === 1 && layers[0].type === 'cursor' ? (layers[0] as CursorLayer) : null;

@@ -83,7 +83,7 @@ export function Preview() {
     if (e.shiftKey) { toggleSelect(id); return; }
     if (!selection.includes(id)) select([id]);
     const ids = selection.includes(id) ? selection : [id];
-    const starts = ids.map((i) => active.find((a) => a.layer.id === i)).filter(Boolean).map((a) => ({
+    const starts = ids.map((i) => active.find((a) => a.layer.id === i)).filter((a) => a && !a.layer.locked).map((a) => ({
       id: a!.layer.id, x: a!.resolved.x, y: a!.resolved.y, cursor: a!.resolved.type === 'cursor',
       pts: a!.resolved.type === 'cursor' ? a!.resolved.points.map((p) => ({ ...p })) : [],
     }));

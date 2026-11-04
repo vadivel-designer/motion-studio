@@ -122,7 +122,6 @@ function AssetsSection() {
                 <span className="actions always">
                   {isMissing && <button className="small danger" data-testid="relink-asset" title="The file is missing from the project folder. Pick a replacement." onClick={() => pickFile(a.type === 'image' ? '.png,.jpg,.jpeg,.webp,.svg' : '.ttf,.otf,.woff2', (f) => void relinkAsset(a.id, f))}>Relink…</button>}
                   {a.type === 'image' && !isMissing && <button className="small" data-testid="place-asset" title="Place this image in the active scene" onClick={() => addLayer({ kind: 'image', assetId: a.id })}>Place</button>}
-                  {a.type === 'image' && isMissing && used(a.id) === false && null}
                   <IconButton title={used(a.id) ? 'In use by a layer – delete the layer first' : 'Remove this asset from the project'} disabled={used(a.id)} onClick={() => removeAsset(a.id)}>🗑</IconButton>
                 </span>
               </li>

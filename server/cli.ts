@@ -23,7 +23,8 @@ async function main() {
 
   const out = path.resolve(outArg);
   fs.mkdirSync(path.dirname(out), { recursive: true });
-  const srv = await startServer({ port: 0, projectsDir: fs.mkdtempSync(path.join(os.tmpdir(), 'motion-cli-')), renderSrc: folder, quiet: true });
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'motion-cli-'));
+  const srv = await startServer({ port: 0, projectsDir: tmp, renderSrc: folder, quiet: true });
   try {
     const { frames } = await renderToMp4({
       pageUrl: `http://localhost:${srv.port}/render.html?src=/render-src`,
@@ -36,6 +37,7 @@ async function main() {
     process.exitCode = 1;
   } finally {
     await srv.close();
+    fs.rmSync(tmp, { recursive: true, force: true });
     process.exit(process.exitCode ?? 0);
   }
 }
